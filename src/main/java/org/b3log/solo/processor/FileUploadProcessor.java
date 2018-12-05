@@ -161,7 +161,7 @@ public class FileUploadProcessor {
         UploadManager uploadManager = null;
         String uploadToken = null;
         JSONObject qiniu = null;
-        final String date = DateFormatUtils.format(System.currentTimeMillis(), "yyyy/MM");
+        String date = DateFormatUtils.format(System.currentTimeMillis(), "yyyy/MM/dd");
         if (QN_ENABLED) {
             try {
                 final BeanManager beanManager = BeanManager.getInstance();
@@ -205,7 +205,7 @@ public class FileUploadProcessor {
 
                 final String name = StringUtils.substringBeforeLast(fileName, ".");
                 final String processName = name.replaceAll("\\W", "");
-                final String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+                final String uuid = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 3);
                 fileName = uuid + '_' + processName + "." + suffix;
 
                 if (QN_ENABLED) {
@@ -214,13 +214,27 @@ public class FileUploadProcessor {
                         fileName = names[i];
                     }
                     uploadManager.put(file.getFileInputStream(), fileName, uploadToken, null, contentType);
-                    succMap.put(originalName, qiniu.optString(Option.ID_C_QINIU_DOMAIN) + "/" + fileName);
+                    succMap.put(originalName, qiniu.optString(Option.ID_C_QINIU_DOMAIN) + "\\" + fileName);
                 } else {
-                    try (final OutputStream output = new FileOutputStream(Solos.UPLOAD_DIR_PATH + fileName);
+                    //为每张图片的地址添加日期，图片路径如/upload/2018/12/05/fileName
+
+                    File dirFile = new File(Solos.UPLOAD_DIR_PATH + date + "\\");
+                    if (!FileUtil.isExistingFolder(dirFile)) {
+                        try {
+                            FileUtil.mkdirs(dirFile);
+                        } catch (IOException ex) {
+                            LOGGER.log(Level.ERROR, "Init upload dir error", ex);
+
+                            System.exit(-1);
+                        }
+                    }
+
+
+                    try (final OutputStream output = new FileOutputStream(Solos.UPLOAD_DIR_PATH + date + "\\" + fileName);
                          final InputStream input = file.getFileInputStream()) {
                         IOUtils.copy(input, output);
                     }
-                    succMap.put(originalName, Latkes.getServePath() + "/upload/" + fileName);
+                    succMap.put(originalName, Latkes.getServePath() + "/upload/" + date + "/" + fileName);
                 }
             } catch (final Exception e) {
                 LOGGER.log(Level.WARN, "Uploads file failed", e);
