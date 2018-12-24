@@ -218,7 +218,7 @@ public class FileUploadProcessor {
                 } else {
                     //为每张图片的地址添加日期，图片路径如/upload/2018/12/05/fileName
 
-                    File dirFile = new File(Solos.UPLOAD_DIR_PATH + date + "\\");
+                    File dirFile = new File(Solos.UPLOAD_DIR_PATH + date + File.separator);
                     if (!FileUtil.isExistingFolder(dirFile)) {
                         try {
                             FileUtil.mkdirs(dirFile);
@@ -230,7 +230,7 @@ public class FileUploadProcessor {
                     }
 
 
-                    try (final OutputStream output = new FileOutputStream(Solos.UPLOAD_DIR_PATH + date + "\\" + fileName);
+                    try (final OutputStream output = new FileOutputStream(Solos.UPLOAD_DIR_PATH + date + File.separator + fileName);
                          final InputStream input = file.getFileInputStream()) {
                         IOUtils.copy(input, output);
                     }

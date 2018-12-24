@@ -30,6 +30,8 @@
     <include path="/favicon.png"/>
     <include path="/robots.txt"/>
     <include path="/manifest.json"/>
+    <include path="/google02a2d364e20bc5bb.html"/>
+    <include path="/baidu_verify_vFRKJfRT54.html"/>
 
     <include path="/js/**.js"/>
     <include path="/js/**/*.js"/>
