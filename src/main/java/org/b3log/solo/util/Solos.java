@@ -40,10 +40,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Solo utilities.
@@ -391,7 +388,8 @@ public final class Solos {
      * @return the Gravatar URL
      */
     public static String getGravatarURL(final String email, final String size) {
-        return GRAVATAR + DigestUtils.md5Hex(email) + "?s=" + size;
+        Random random = new Random();
+        return GRAVATAR + random.nextInt(10) + ".jpg";
     }
 
     /**
